@@ -25,13 +25,13 @@ func TestBestruct_Same(t *testing.T) {
 		{"", nil, nil, ""},
 		{"", 42, nil, "FAIL in tn\nnote\ngot 42, wanted nil"},
 		{"", nil, 42, "FAIL in tn\nnote\ngot nil, wanted 42"},
-		{"", 42.0, 42, "FAIL in tn\nnote\n- \tint(42),\n+ \tfloat64(42),"},
-		{"", 42.0, 42, "FAIL in tn\nnote\n- \tint(42),\n+ \tfloat64(42),"},
+		{"", 42.0, 42, "FAIL in tn\nnote\n- \tfloat64(42),\n+ \tint(42),"},
+		{"", 42.0, 42, "FAIL in tn\nnote\n- \tfloat64(42),\n+ \tint(42),"},
 		{"", "a", "a", ""},
-		{"", ex{1}, ex{2}, "FAIL in tn\nnote\nsure_test.ex{\n- \tA: 2,\n+ \tA: 1,\n  }"},
+		{"", ex{1}, ex{2}, "FAIL in tn\nnote\nsure_test.ex{\n- \tA: 1,\n+ \tA: 2,\n  }"},
 		{"", ex{1}, ex{1}, ""},
 		{"", &ex{1}, &ex{1}, ""},
-		{"", ex{1}, &ex{1}, "FAIL in tn\nnote\n- \t&sure_test.ex{A: 1},\n+ \tsure_test.ex{A: 1},"},
+		{"", ex{1}, &ex{1}, "FAIL in tn\nnote\n- \tsure_test.ex{A: 1},\n+ \t&sure_test.ex{A: 1},"},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {

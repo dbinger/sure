@@ -123,7 +123,7 @@ func (b *BeStruct) compare(got, want any) (bool, error) {
 
 // diff is like cmp.Diff, except with some edits on the output string.
 func (b *BeStruct) diff(got, want any) string {
-	diff := cmp.Diff(got, want, b.CmpOptions...)
+	diff := cmp.Diff(want, got, b.CmpOptions...)
 	diff = strings.TrimSpace(diff)
 	// Replace nbsp characters that cmp.Diff uses.
 	diff = strings.ReplaceAll(diff, "\u00a0", " ")
