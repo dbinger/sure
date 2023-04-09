@@ -80,9 +80,9 @@ func (b *BeStruct) eqString(got, want any) string {
 		return ""
 	}
 	if want == nil {
-		return fmt.Sprintf("got %v, wanted nil", got)
+		return fmt.Sprintf("got %#v, wanted nil", got)
 	} else if got == nil {
-		return fmt.Sprintf("got nil, wanted %v", want)
+		return fmt.Sprintf("got nil, wanted %#v", want)
 	} else {
 		return b.diff(want, got)
 	}
@@ -123,8 +123,7 @@ func (b *BeStruct) compare(got, want any) (bool, error) {
 
 // diff is like cmp.Diff, except with some edits on the output string.
 func (b *BeStruct) diff(got, want any) string {
-	diff := "mismatch -got +want\n"
-	diff += cmp.Diff(want, got, b.CmpOptions...)
+	diff := cmp.Diff(want, got, b.CmpOptions...)
 	diff = strings.TrimSpace(diff)
 	// Replace nbsp characters that cmp.Diff uses.
 	diff = strings.ReplaceAll(diff, "\u00a0", " ")
@@ -132,5 +131,6 @@ func (b *BeStruct) diff(got, want any) string {
 	if strings.HasPrefix(diff, "any(\n") {
 		diff = diff[5:strings.LastIndex(diff, "\n")]
 	}
+	diff = "mismatch -got +want\n" + diff
 	return diff
 }
