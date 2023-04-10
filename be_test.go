@@ -21,6 +21,7 @@ func TestBestruct_Same(t *testing.T) {
 		want any
 		msg  string
 	}
+	var exNil *ex
 	tests := []testcase{
 		{"", nil, nil, ""},
 		{"", 42, nil, "FAIL in tn\nnote\ngot 42, wanted nil"},
@@ -32,6 +33,8 @@ func TestBestruct_Same(t *testing.T) {
 		{"", ex{1}, ex{1}, ""},
 		{"", &ex{1}, &ex{1}, ""},
 		{"", ex{1}, &ex{1}, "FAIL in tn\nnote\nmismatch -got +want\n- \tsure_test.ex{A: 1},\n+ \t&sure_test.ex{A: 1},"},
+		{"", exNil, (*ex)(nil), ""},
+		{"", (*ex)(nil), exNil, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
@@ -72,6 +75,7 @@ func TestBeStruct_Diff(t *testing.T) {
 		want any
 		msg  string
 	}
+	var exNil ex
 	tests := []testcase{
 		{"", nil, nil, "FAIL in tn\nnote\ngot nil, wanted non-nil"},
 		{"", 42, nil, ""},
@@ -83,6 +87,8 @@ func TestBeStruct_Diff(t *testing.T) {
 		{"", ex{1}, ex{1}, "FAIL in tn\nnote\ngot sure_test.ex{A:1}, wanted anything else"},
 		{"", &ex{1}, &ex{1}, "FAIL in tn\nnote\ngot &sure_test.ex{A:1}, wanted anything else"},
 		{"", ex{1}, &ex{1}, ""},
+		{"", exNil, nil, ""},
+		{"", nil, exNil, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
