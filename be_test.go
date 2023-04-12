@@ -23,17 +23,17 @@ func TestBestruct_Same(t *testing.T) {
 	}
 	var exNil *ex
 	tests := []testcase{
-		{"", nil, nil, ""},
-		{"", 42, nil, "FAIL in tn\nnote\nGOT:  int(42)\nWANT: nil"},
-		{"", nil, 42, "FAIL in tn\nnote\nGOT:  nil\nWANT: int(42)"},
-		{"", 42.0, 42, "FAIL in tn\nnote\nGOT:  float64(42),\nWANT: int(42)"},
-		{"", "a", "a", ""},
-		{"", ex{1}, ex{2}, "FAIL in tn\nnote\nsure_test.ex{\nGOT:  A: 1,\nWANT: A: 2,\n  }"},
-		{"", ex{1}, ex{1}, ""},
-		{"", &ex{1}, &ex{1}, ""},
-		{"", ex{1}, &ex{1}, "FAIL in tn\nnote\nGOT:  sure_test.ex{A: 1},\nWANT: &sure_test.ex{A: 1}"},
-		{"", exNil, (*ex)(nil), ""},
-		{"", (*ex)(nil), exNil, ""},
+		{"1", nil, nil, ""},
+		{"2", 42, nil, "FAIL in tn\nnote\nGOT:  int(42)\nWANT: nil"},
+		{"3", nil, 42, "FAIL in tn\nnote\nGOT:  nil\nWANT: int(42)"},
+		{"4", 42.0, 42, "FAIL in tn\nnote\nGOT:  float64(42),\nWANT: int(42)"},
+		{"5", "a", "a", ""},
+		{"6", ex{1}, ex{2}, "FAIL in tn\nnote\nsure_test.ex{\nGOT:  A: 1,\nWANT: A: 2,\n  }"},
+		{"7", ex{1}, ex{1}, ""},
+		{"8", &ex{1}, &ex{1}, ""},
+		{"9", ex{1}, &ex{1}, "FAIL in tn\nnote\nGOT:  sure_test.ex{A: 1},\nWANT: &sure_test.ex{A: 1}"},
+		{"10", exNil, (*ex)(nil), ""},
+		{"11", (*ex)(nil), exNil, ""},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
