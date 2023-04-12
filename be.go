@@ -80,9 +80,9 @@ func (b *BeStruct) eqString(got, want any) string {
 		return ""
 	}
 	if want == nil {
-		return fmt.Sprintf("got %T(%v), wanted nil", got, got)
+		return fmt.Sprintf("GOT:  %T(%v)\nWANT: nil", got, got)
 	} else if got == nil {
-		return fmt.Sprintf("got nil, wanted %T(%v)", want, want)
+		return fmt.Sprintf("GOT:  nil\nWANT: %T(%v)", want, want)
 	} else {
 		return b.diff(want, got)
 	}
@@ -99,9 +99,9 @@ func (b *BeStruct) notEqString(got, dontwant any) string {
 		return ""
 	}
 	if dontwant == nil {
-		return "got nil, wanted non-nil"
+		return "GOT:  nil\nWANT: anything else"
 	} else {
-		return fmt.Sprintf("got %T(%v), wanted anything else", got, got)
+		return fmt.Sprintf("GOT:  %T(%v)\nWANT: anything else", got, got)
 	}
 }
 
@@ -125,12 +125,13 @@ func (b *BeStruct) compare(got, want any) (bool, error) {
 func (b *BeStruct) diff(got, want any) string {
 	diff := cmp.Diff(want, got, b.CmpOptions...)
 	diff = strings.TrimSpace(diff)
-	// Replace nbsp characters that cmp.Diff uses.
 	diff = strings.ReplaceAll(diff, "\u00a0", " ")
-	// Trim "any(" ")" wrapper to shorten output.
+	diff = strings.ReplaceAll(diff, "\n- \t", "\nGOT:  ")
+	diff = strings.ReplaceAll(diff, "\n+ \t", "\nWANT: ")
 	if strings.HasPrefix(diff, "any(\n") {
 		diff = diff[5:strings.LastIndex(diff, "\n")]
 	}
-	diff = "mismatch -got +want\n" + diff
+	diff = strings.ReplaceAll(diff, "\t", "    ")
+	diff = strings.Trim(diff, ",\n")
 	return diff
 }
