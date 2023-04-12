@@ -34,16 +34,13 @@ func TestFun(t *testing.T) {
 All error messages include file name, line number, and test name.
 
 Error messages are constructed on the assumption that the first argument
-is the "got".  In general, error messages are constructed using
-`cmp.Diff` output, which nicely explains differences between most
-different values.  When, however, one of the arguments is nil, the error
-message is constructed to say something like "got 42, wanted nil"
-instead of using `cmp.Diff`.
+is the "got".  
 
 When one of the arguments contains a struct with an unexported field,
 the error message will contain the error string produced by the
 resulting `cmp.Equal` panic call.  See the documentation in the `cmp`
-package for comparison options.
+package for comparison options.  Comparison options can be provided
+as additional arguments to the sure.Be constructor.
 
 If you want error messsages to include additional 
 notes about the error, you can add them as an additional 
@@ -52,3 +49,10 @@ arguments to the assertion method call like this:
 ```
 b.Diff(err, nil, "could not find user", username)
 ```
+
+# Usage Note
+
+The `cmp.Equal` function returns false when comparing nil to a nil pointer.  
+If you want to use these methods to check if a pointer like *X is nil, 
+you need to compare it to (*X)(nil), not plain nil.
+
