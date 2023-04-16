@@ -79,13 +79,14 @@ func (b *BeStruct) eqString(got, want any) string {
 	if equal {
 		return ""
 	}
-	if want == nil {
-		return fmt.Sprintf("GOT:  %T(%v)\nWANT: nil", got, got)
-	} else if got == nil {
-		return fmt.Sprintf("GOT:  nil\nWANT: %T(%v)", want, want)
-	} else {
-		return b.diff(want, got)
+	s := b.diff(want, got)
+	if got == nil && !strings.Contains(s, "GOT:  ") {
+		s = "GOT:  nil\n" + s
 	}
+	if want == nil && !strings.Contains(s, "WANT: ") {
+		s = s + "\nWANT: nil"
+	}
+	return s
 }
 
 // notEqString returns a non-empty explanation if got is the same as dontwant,
@@ -98,10 +99,12 @@ func (b *BeStruct) notEqString(got, dontwant any) string {
 	if !equal {
 		return ""
 	}
-	if dontwant == nil {
+	if got == nil {
 		return "GOT:  nil\nWANT: anything else"
 	} else {
-		return fmt.Sprintf("GOT:  %T(%v)\nWANT: anything else", got, got)
+		s := b.eqString(got, nil)
+		s = strings.Replace(s, "WANT: nil", "WANT: anything else", 1)
+		return s
 	}
 }
 
@@ -128,8 +131,10 @@ func (b *BeStruct) diff(got, want any) string {
 	diff = strings.ReplaceAll(diff, "\u00a0", " ")
 	diff = strings.ReplaceAll(diff, "\n- \t", "\nGOT:  ")
 	diff = strings.ReplaceAll(diff, "\n+ \t", "\nWANT: ")
-	if strings.HasPrefix(diff, "any(\n") {
-		diff = diff[5:strings.LastIndex(diff, "\n")]
+	i := strings.Index(diff, "(\n")
+	if i != -1 {
+		diff = diff[i+2 : strings.LastIndex(diff, "\n")]
+		diff = strings.Replace(diff, ",\n", "\n", 1)
 	}
 	diff = strings.ReplaceAll(diff, "\t", "    ")
 	diff = strings.Trim(diff, ",\n")
