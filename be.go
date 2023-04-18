@@ -31,8 +31,11 @@ type BeStruct struct {
 // including cmpopts.EquateErrors() by default.
 func Be(t *testing.T, options ...cmp.Option) *BeStruct {
 	options = append(options, cmpopts.EquateErrors())
-	return &BeStruct{T: t, CmpOptions: options, Name: t.Name(),
-		FatalFunc: t.Fatal,
+	return &BeStruct{
+		T:          t,
+		CmpOptions: options,
+		Name:       t.Name(),
+		FatalFunc:  t.Fatal,
 	}
 }
 
